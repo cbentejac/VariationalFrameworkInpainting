@@ -14,5 +14,6 @@ function distance = Distance(A, B, i, j, offset_i, offset_j, half_patch)
     patch_A = patch_A .* mask;
     patch_B = patch_B .* mask;
     
-    distance = immse(patch_A, patch_B) * numel(patch_A);   
+%     distance = immse(patch_A, patch_B) * numel(patch_A);   
+    distance = Error_patch_non_local_Poisson(patch_A, patch_B, size(patch_A, 1), 0.5, 0.5);
 end
