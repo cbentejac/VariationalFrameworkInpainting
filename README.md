@@ -7,6 +7,7 @@ This MATLAB implementation of the variational framework for non-local inpainting
 - [x] Consider all types of images (grayscale and color images)
 - [x] Write the patch error function `E` for the patch non-local Poisson
 - [x] Implement the entire patch match algorithm to compute the nearest-neighbor fields
+- [ ] Parallelize the patch match algorithm
 - [ ] Minimize the energies
     - [ ] Correspondance update step
     - [ ] Image update step
@@ -15,7 +16,6 @@ This MATLAB implementation of the variational framework for non-local inpainting
 
 
 ## To do (if enough time left)
-- [ ] Parallelize the patch match algorithm
 - [ ] Write the patch error function `E` for the patch non-local means
 - [ ] Write the patch error function `E` for the patch non-local medians
 - [ ] Add the new patch error functions to the patch match algorithm and make them a parameter

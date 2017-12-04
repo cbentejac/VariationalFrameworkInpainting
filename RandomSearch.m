@@ -10,11 +10,11 @@ function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x,
     % arbitrary value used to generate a random integer).
     rand_max = 32767; 
     while rs_start >= 1
-        x_min = max(best_x - rs_start, 1 + half_patch);
-        x_max = min(best_x + rs_start + 1, m + half_patch);
-        y_min = max(best_y - rs_start, 1 + half_patch); 
-        y_max = min(best_y + rs_start + 1, n + half_patch);                    
-
+        x_min = max(best_x - rs_start, 1);
+        x_max = min(best_x + rs_start, m);
+        y_min = max(best_y - rs_start, 1);
+        y_max = min(best_y + rs_start, n);
+        
         % Generating the random candidates.
         xp = mod(x_min + randi(rand_max), abs(x_max - x_min));
         yp = mod(y_min + randi(rand_max), abs(y_max - y_min));
