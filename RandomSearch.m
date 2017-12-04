@@ -21,20 +21,12 @@ function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x,
 
         % Handling the case where the modulo is 0 or superior
         % to the image's size.
-        if xp == 0
-            xp = 1;
-        end
-        if yp == 0
-            yp = 1;
-        end                    
-        if xp > size(pad_B, 1) - half_patch
-            xp = size(pad_B, 1) - half_patch;
-        end
-        if yp > size(pad_B, 2) - half_patch
-            yp = size(pad_B, 2) - half_patch;
-        end
+        size_B_x = size(pad_B, 1) - half_patch - half_patch;
+        size_B_y = size(pad_B, 2) - half_patch - half_patch;
 
-        [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i, j, xp, yp, best_guess, best_x, best_y, half_patch);
+        if xp > 0 && xp <= size_B_x && yp > 0 && yp <= size_B_y
+            [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i, j, xp, yp, best_guess, best_x, best_y, half_patch);
+        end
 
         % Updating the iteration variable (value taken from the
         % paper).
