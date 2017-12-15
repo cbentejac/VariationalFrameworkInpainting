@@ -20,7 +20,6 @@
 % This function need to call its auxiliary function <<distance2boundry>>
 %% 
 function confidence_mask=calculate_confidence_mask(domain,decay_time,asymptotic_value)
-
 if max(domain) == 255, domain=domain/255;end;
 
 if decay_time>0
@@ -28,6 +27,7 @@ if decay_time>0
     confidence_mask=dist;
     confidence_mask(domain==1)=(1-asymptotic_value)*exp(-dist(domain==1)/decay_time)+asymptotic_value;
 else
+    confidence_mask=1-domain;
     confidence_mask(domain==1)=asymptotic_value;
 end
     
