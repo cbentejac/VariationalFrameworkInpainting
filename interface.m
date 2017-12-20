@@ -160,7 +160,11 @@ if (isnan(size_patch))
     errordlg ('The size of the patch must be an integer','Error','modal');
     return
 end
-if (2*size_patch+1 > m || 2*size_patch+1 > n || 2*size_patch+1 < 0)
+if (mod(size_patch,2) == 0)
+   errordlg ('The size of the patch must be odd','Error','modal');
+   return
+end
+if (size_patch > m || size_patch > n || size_patch < 0)
     errordlg ('The size of the patch must be an integer greater than or equal to 0','Error','modal');
     return
 end
@@ -178,12 +182,12 @@ if (lambda > 1 || lambda < 0)
     errordlg ('Lambda must be real between 0 and 1','Error','modal');
     return
 end
-%appel de la fonction variationnal framework
-%avec les param name_image, name_mask, mask_given, lambda, size_patch, L
 msgbox ('In process');
 %appel de la fonction variationnal framework
-%avec les param name_image, name_mask, mask_given, lambda, size_patch, L
+[I_final,~] = variational_framework (I, M, size_patch, L, median, average, poisson);
 msgbox ('It''s done :)');
+figure
+imagesc (I_final)
 
 
 
