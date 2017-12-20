@@ -10,9 +10,8 @@ g_sigma = fspecial('gaussian',kernel_size);
 pyramid_mask{1}=Mask;
 for l=2:L
     imblur=imfilter(pyramid_mask{l-1},g_sigma,'replicate');
-    pyramid_mask{l}=imresize(imblur,1/r,'nearest');%when scale parameter<0 , 'nearest' 
-                                                   %only removes rows and columns, while keeps the
-                                                   %values of remaining pixels the same
+    pyramid_mask{l}=imresize(imblur,1/r,'nearest');%when scale parameter<0 , 'nearest' only removes rows and columns,
+                                                   %while keeps the values of remaining pixels the same
     pyramid_mask{l}=pyramid_mask{l}>0.4;
 end
 
