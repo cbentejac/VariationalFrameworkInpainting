@@ -119,7 +119,7 @@ function pushbutton1_Callback( ~, ~, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %recuperation méthode
 median = 0;
-mean = 0;
+average = 0;
 poisson = 0;
 choix1 = get (handles.uibuttongroup1, 'SelectedObject');
 choix2 = char (get (choix1, 'String'));
@@ -127,7 +127,7 @@ if (strcmp (choix2, 'Median'))
     median = 1;
 end
 if (strcmp (choix2, 'Mean'))
-    mean = 1;
+    average = 1;
 end
 if (strcmp (choix2, 'Poisson'))
     poisson = 1;
@@ -173,7 +173,11 @@ if (isnan(L) || L <= 0)
     errordlg ('The number of level for multiscale scheme must be an integer greater than or equal to 1','Error','modal');
     return
 end
-lambda = str2double(get(handles.edit3, 'string'));
+if (poisson == 1)
+    lambda = str2double(get(handles.edit3, 'string'));
+else
+    lambda = 1;
+end
 if (isnan(lambda))
     errordlg ('Lambda must be real','Error','modal');
     return
@@ -184,7 +188,7 @@ if (lambda > 1 || lambda < 0)
 end
 msgbox ('In process');
 %appel de la fonction variationnal framework
-[I_final,~] = variational_framework (I, M, size_patch, L, median, average, poisson);
+[I_final,~] = variational_framework (I, M, lambda, size_patch, L, median, average, poisson);
 msgbox ('It''s done :)');
 figure
 imagesc (I_final)
