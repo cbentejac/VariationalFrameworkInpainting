@@ -179,7 +179,7 @@ else
     lambda = 1;
 end
 if (isnan(lambda))
-    errordlg ('Lambda must be real','Error','modal');
+    errordlg ('Lambda must be a real','Error','modal');
     return
 end
 if (lambda > 1 || lambda < 0)
