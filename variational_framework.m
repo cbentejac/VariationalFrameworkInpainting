@@ -12,6 +12,6 @@ function [offset_map, I_final] = variational_framework (I_init, Mask, lambda, si
     if nb_level == 1
         [I_final, offset_map] = MinimizationOfEnergies (I, M, sigma2, tolerance, lambda, half_size_patch, median, average, poisson);
     end
-    % else %nblevel >= 1
+    % else %nblevel > 1
     %     %appelermultiscale
 end
