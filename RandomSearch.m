@@ -1,6 +1,11 @@
-function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x, best_y, best_guess, m, n, half_patch)
+% Assuming the propagation phase has been done, process with the random
+% search to improve the current best offsets. To do so, select pixels
+% randomly within a decreasing window and see if they are a better fit or
+% not.
+function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x, best_y, best_guess, A, half_patch)
     % Initializing the beginning of random search (max
     % iterations).
+    [m, n, ~] = size(A);
     rs_start = intmax;
     if rs_start > max(m + half_patch, n + half_patch)
         rs_start = max(m + half_patch, n + half_patch);

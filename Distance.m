@@ -1,10 +1,7 @@
 % Returns the distance between the patch of image A and the patch of target
 % image B, using Poisson.
 function distance = Distance(A, B, i, j, offset_i, offset_j, half_patch)
-    patch_A = A(i - half_patch : i + half_patch, j - half_patch : j + half_patch, :);    
-%     disp(offset_i);
-%     disp(offset_j);
-%     disp(size(B));
+    patch_A = A(i - half_patch : i + half_patch, j - half_patch : j + half_patch, :);
     patch_B = B(offset_i - half_patch : offset_i + half_patch, offset_j - half_patch : offset_j + half_patch, :);
     
     % Mask to take only the known pixels into accounts (we're getting rid

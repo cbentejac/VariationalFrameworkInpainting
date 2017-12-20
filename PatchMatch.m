@@ -1,6 +1,7 @@
 % Given two images A and B, returns the nearest-neighbour field using the
 % patch match method.
 function NNF = PatchMatch(A, B, patch_size, iterations)
+tic;
     A = double(A);
     B = double(B);
 
@@ -30,33 +31,15 @@ function NNF = PatchMatch(A, B, patch_size, iterations)
     
     k = 1;
     while k <= iterations 
-        disp(['Iteration k = ', num2str(k)]);
+        disp(['Starting iteration k = ', num2str(k), ' / ', num2str(iterations)]);
          
-        % Odd iteration (top and left candidates).
-        x_start = 1 + half_patch;
-        x_end = m + half_patch;
-        x_change = 1;
-        y_start = 1 + half_patch;
-        y_end = n + half_patch;
-        y_change = 1;
-        
-        % Even iteration (bottom and right candidates).
-        if mod(k, 2) == 0
-            x_start = x_end;
-            x_end = 1 + half_patch;
-            x_change = -1;
-            y_start = y_end; 
-            y_end = 1 + half_patch;
-            y_change = -1;
-        end
+        [x_start, x_end, x_change, y_start, y_end, y_change] = GetPropapagationLimits(k, A, half_patch);
 
         for i = x_start : x_change : x_end
             for j = y_start : y_change : y_end
                 
                 % Current best guess.
-                best_x = NNF(i - half_patch, j - half_patch, 1);
-                best_y = NNF(i - half_patch, j - half_patch, 2);
-                best_guess = NNF(i - half_patch, j - half_patch, 3);
+                [best_x, best_y, best_guess] = GetBestOffsets(NNF, i - half_patch, j - half_patch);
                 
                 % Propagation with absolute coordinates.
                 % Left (odd) or right (even) propagation.
@@ -77,15 +60,14 @@ function NNF = PatchMatch(A, B, patch_size, iterations)
                     end
                 end
                 
-                % Random search.
-                [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x, best_y, best_guess, m, n, half_patch);
-                                
-                % Saving the new nearest-neighbour.
-                NNF(i - half_patch, j - half_patch, 1) = best_x;
-                NNF(i - half_patch, j - half_patch, 2) = best_y;
-                NNF(i - half_patch, j - half_patch, 3) = best_guess;                
+                [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, i, j, best_x, best_y, best_guess, A, half_patch);
+                
+                % Updating the NNF accordingly by saving the new nearest-neighbour.
+                NNF = UpdateNNF(NNF, i - half_patch, j - half_patch, best_x, best_y, best_guess);                
             end
-        end        
+        end  
+         
         k = k + 1;
     end
+    toc;
 end
