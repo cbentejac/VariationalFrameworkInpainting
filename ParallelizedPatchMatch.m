@@ -1,30 +1,24 @@
 % Given two images A and B, returns the nearest-neighbour field using the
 % parallelized patch match method.
-function NNF = ParallelizedPatchMatch(A, B, patch_size, iterations)
+function NNF = ParallelizedPatchMatch(A, B, patch_size, iterations, NNF)
     tic;
     A = double(A);
     B = double(B);
-
-    % Handling the input given (or not) as parameters and correcting them
-    % if required. In particular, we need an odd patch size since we are
-    % centering the patches on the pixel we are trying to fill.
-    if nargin == 3
-        iterations = 5;
-    end
-    if nargin == 2
-        patch_size = 5;
-        iterations = 5;
-    end    
+    
     if mod(patch_size, 2) == 0  
         patch_size = patch_size + 1;
     end
-   
+    
     half_patch = floor(patch_size / 2);
     pad_A = padarray(A, [half_patch half_patch], -1);
-    pad_B = padarray(B, [half_patch half_patch], -1);
-    
-    % Initializing the NNF (two output buffers).
-    NNF = InitializeNNF(A, B, pad_A, pad_B, half_patch);
+    pad_B = padarray(B, [half_patch half_patch], -1);    
+
+    % Handling the NNF initialization if the NNF is not already provided
+    % with.
+    if nargin == 4
+        % Initializing the NNF.
+        NNF = InitializeNNF(A, B, pad_A, pad_B, half_patch);
+    end
 
     % For hyperthreaded CPUs to work, we need to use a cluster profile and
     % not the local ones which is set to the number of physical cores...
