@@ -22,7 +22,7 @@ function varargout = interface(varargin)
 
 % Edit the above text to modify the response to help interface
 
-% Last Modified by GUIDE v2.5 18-Dec-2017 12:00:22
+% Last Modified by GUIDE v2.5 20-Dec-2017 11:26:15
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -318,3 +318,20 @@ function uibuttongroup2_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to uibuttongroup2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --------------------------------------------------------------------
+function uipushtool1_ClickedCallback(hObject, eventdata, handles)
+% hObject    handle to uipushtool1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+msg =  {'Usage for Variational Framework for Non-Local Inpainting',...
+    '',...
+    'The panel method allow to choose the patch error function between Median, Mean and Poisson.',...
+    'The panel parameters allows to choose differents parameters :',...
+    '   -Lambda must be a real number between 0 et 1',...
+    '   -The number of level for the multiscale scheme must be a integer greater than or equal to 1',...
+    '   -The size of the patch must be an odd integer greater than or equal to 1 and lower than the size of the image',...
+    'The panel image allows to give the name of the input image',...
+    'The panel mask allows to give the name of the file of the input mask. Given a mask is optinal, the user have to precise if he gives a mask or not using the radio button Yes and No.'};
+helpdlg (msg, 'Usage');
