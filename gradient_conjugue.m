@@ -3,6 +3,7 @@ uz = u0;
 r = (1-lambda) * div (gradx(kz.*vx),grady(kz.*vy))-lambda*kz.*fz;
 p = r;
 for i=1:nb_iter
+    disp(i)
    Ap = (1-lambda) * div (gradx(kz.*gradx(uz)),grady(kz.*grady(uz)))-lambda*kz.*uz;
    r_t = permute (r,[2,1,3]);
    p_t = permute (p,[2,1,3]);
@@ -22,9 +23,9 @@ for i=1:nb_iter
        break;
    end
    r1_t = permute (r1,[2,1,3]);
-   beta(:,:,1) = (r1_t(:,:,1)*r1(:,:,1))./(r_t(:,:,1)*r(:,:,1));
-   beta(:,:,2) = (r1_t(:,:,2)*r1(:,:,2))./(r_t(:,:,2)*r(:,:,2));
-   beta(:,:,3) = (r1_t(:,:,3)*r1(:,:,3))./(r_t(:,:,3)*r(:,:,3));
+   beta(:,:,1) = (r1(:,:,1)*r1_t(:,:,1))./(r(:,:,1)*r_t(:,:,1));
+   beta(:,:,2) = (r1(:,:,2)*r1_t(:,:,2))./(r(:,:,2)*r_t(:,:,2));
+   beta(:,:,3) = (r1(:,:,3)*r1_t(:,:,3))./(r(:,:,3)*r_t(:,:,3));
    p(:,:,1) = r1(:,:,1) + beta(:,:,1)*p(:,:,1);
    p(:,:,2) = r1(:,:,2) + beta(:,:,2)*p(:,:,2);
    p(:,:,3) = r1(:,:,3) + beta(:,:,3)*p(:,:,3);
