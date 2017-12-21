@@ -18,7 +18,7 @@ for i=1:nb_iter
    r1(:,:,1) = r(:,:,1) - alpha(:,:,1)*Ap(:,:,1);
    r1(:,:,2) = r(:,:,2) - alpha(:,:,2)*Ap(:,:,2);
    r1(:,:,3) = r(:,:,3) - alpha(:,:,3)*Ap(:,:,3);
-   if (norm(rk) < epsilon)
+   if (norm2(r1) < epsilon)
        break;
    end
    r1_t = permute (r1,[2,1,3]);
