@@ -34,7 +34,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
         %fz = (1/kz) * sum(sum (sum (m.*u_hat)));
         %vz = (1/kz) * sum(sum(sum(m.*(gradx(u_hat)+grady(u_hat)))));
         u = gradient_conjugue (u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
-        u(Mask==0) = u_hat;
+        u(Mask==0) = u_hat(Mask==0);
     end
     if (median == 1)
         u = zeros(size(u_hat));
