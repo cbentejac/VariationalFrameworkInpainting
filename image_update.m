@@ -1,4 +1,4 @@
-function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, median, average, poisson)
+function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median, average, poisson)
     [m1,n,~] = size (u_hat);
     m = zeros(m1,n);
     Mask = repmat (Mask,[1,1,3]);
