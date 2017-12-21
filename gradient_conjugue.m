@@ -6,7 +6,7 @@ for i=1:nb_iter
    Ap = (1-lambda) * div (gradx(kz.*gradx(uz)),grady(kz.*grady(uz)))-lambda*kz.*uz;
    alpha = (r'*r)/(p'*Ap);
    uz = uz + alpha*p;
-   r1 = r - alpha*A*p;
+   r1 = r - alpha*Ap*p;
    if (norm(rk) < epsilon)
        break;
    end
