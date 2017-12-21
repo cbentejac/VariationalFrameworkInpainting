@@ -19,7 +19,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
         kz = sum(m(:));
         fz = (1/kz) * sum (sum (m.*u_hat));
         vz = (1/kz) * sum(sum(m.*(gradx(u_hat)+grady(u_hat))));
-        u = gradient_conjugue (u_hat, epsilon, lambda, kz, fz, vz, 100);
+        u = gradient_conjugue (u_hat, 0.1, lambda, kz, fz, vz, 100);
         u(Mask==0) = u_hat;
     end
     if (median == 1)
