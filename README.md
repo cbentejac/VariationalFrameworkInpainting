@@ -13,7 +13,7 @@ This MATLAB implementation of the variational framework for non-local inpainting
     - [x] Image update step
 - [x] Implement the confidence masks
 - [ ] Write the report (easy peasy :grin:) -- https://www.overleaf.com/12314065qkxqstqrchft
-- [ ]
+- [ ] Make it work.
 
 ## To do (if enough time left)
 - [ ] Write the patch error function `E` for the patch non-local means
