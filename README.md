@@ -8,20 +8,20 @@ This MATLAB implementation of the variational framework for non-local inpainting
 - [x] Write the patch error function `E` for the patch non-local Poisson
 - [x] Implement the entire patch match algorithm to compute the nearest-neighbor fields
 - [x] Parallelize the patch match algorithm
-- [ ] Minimize the energies
-    - [ ] Correspondance update step
-    - [ ] Image update step
-- [ ] Implement the confidence masks
+- [x] Minimize the energies
+    - [x] Correspondance update step
+    - [x] Image update step
+- [x] Implement the confidence masks
 - [ ] Write the report (easy peasy :grin:) -- https://www.overleaf.com/12314065qkxqstqrchft
-
+- [ ]
 
 ## To do (if enough time left)
 - [ ] Write the patch error function `E` for the patch non-local means
-- [ ] Write the patch error function `E` for the patch non-local medians
+- [x] Write the patch error function `E` for the patch non-local medians
 - [ ] Add the new patch error functions to the patch match algorithm and make them a parameter
-- [ ] Add the possibility for the user to choose which patch error function to use
+- [x] Add the possibility for the user to choose which patch error function to use
 - [ ] Decouple the image and correspondence update steps
-- [ ] Implement the multiscale scheme
-    - [ ] Construction of a masked Gaussian pyramid
-    - [ ] Joint image and NNF upscaling
-- [ ] Add the ability for the user to select the mask by themselves (brush system on the input image)
+- [x] Implement the multiscale scheme
+    - [x] Construction of a masked Gaussian pyramid
+    - [x] Joint image and NNF upscaling
+- [x] Add the ability for the user to select the mask by themselves (brush system on the input image)
