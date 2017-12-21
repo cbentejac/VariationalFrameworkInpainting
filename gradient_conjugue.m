@@ -1,6 +1,6 @@
-function uz = gradient_conjugue (u0, epsilon, lambda, kz, fz, vz, nb_iter)
+function uz = gradient_conjugue (u0, epsilon, lambda, kz, fz, vx,vy, nb_iter)
 uz = u0;
-r = (1-lambda) * div (gradx(kz.*vz),grady(kz.*vz))-lambda*kz.*fz;
+r = (1-lambda) * div (gradx(kz.*vx),grady(kz.*vy))-lambda*kz.*fz;
 p = r;
 for i=1:nb_iter
    Ap = (1-lambda) * div (gradx(kz.*gradx(uz)),grady(kz.*grady(uz)))-lambda*kz.*uz;

@@ -16,10 +16,24 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
             end
         end
         m = repmat (m,[1,1,3]);
-        kz = sum(m(:));
-        fz = (1/kz) * sum (sum (m.*u_hat));
-        vz = (1/kz) * sum(sum(m.*(gradx(u_hat)+grady(u_hat))));
-        u = gradient_conjugue (u_hat, 0.1, lambda, kz, fz, vz, 100);
+        F = zeros (size (m));
+        K = zeros (size (m));
+        Vx = zeros (size (m));
+        Vy = zeros (size (m));
+        for x=1+half_size_patch:m1-half_size_patch
+            for y=1+half_size_patch:n-half_size_patch
+                tmp_m = m(x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                tmp_u = u_hat(x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                K(x,y,:) = sum(sum(tmp_m));
+                F(x,y,:) = (1/K(x,y,:)).* sum(sum(tmp_m.*tmp_u));
+                Vx(x,y,:) = (1/K(x,y,:)).* sum(sum(tmp_m.*gradx(tmp_u)));
+                Vy(x,y,:) = (1/K(x,y,:)).* sum(sum(tmp_m.*grady(tmp_u)));
+            end
+        end
+        %kz = sum(m(:));
+        %fz = (1/kz) * sum(sum (sum (m.*u_hat)));
+        %vz = (1/kz) * sum(sum(sum(m.*(gradx(u_hat)+grady(u_hat)))));
+        u = gradient_conjugue (u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
         u(Mask==0) = u_hat;
     end
     if (median == 1)
