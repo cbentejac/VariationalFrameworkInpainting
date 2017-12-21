@@ -1,15 +1,10 @@
 % Given two images A and B, returns the nearest-neighbour field using the
 % parallelized patch match method.
-function NNF = ParallelizedPatchMatch(A, B, patch_size, iterations, NNF)
+function NNF = ParallelizedPatchMatch(A, B, half_patch, iterations, NNF)
     tic;
     A = double(A);
     B = double(B);
     
-    if mod(patch_size, 2) == 0  
-        patch_size = patch_size + 1;
-    end
-    
-    half_patch = floor(patch_size / 2);
     pad_A = padarray(A, [half_patch half_patch], -1);
     pad_B = padarray(B, [half_patch half_patch], -1);    
 
@@ -56,8 +51,8 @@ function NNF = ParallelizedPatchMatch(A, B, patch_size, iterations, NNF)
                 for j = y_start : y_change : y_end
                     
                     % Current best guess.
-                    [best_x, best_y, best_guess] = GetBestOffsets(NNF_chunk{N}, i - half_patch, j - half_patch);
-
+                    [best_x, best_y, best_guess] = GetBestOffsets(NNF_chunk{N}, i - half_patch, j - half_patch);                                      
+                    
                     % Propagation with absolute coordinates.
                     % Left (odd) or right (even) propagation.
                     if (i - half_patch - x_change) > 0 && (i - x_change - half_patch) <= m
