@@ -6,12 +6,12 @@ function [offset_map, I_final] = variational_framework (I_init, Mask, lambda, si
     M = bord (M, half_patch_size);
     sigma2 = 0.5;
     tolerance = 0.01;
-    %A = ;
+    A = 0.15;
     decay_time
     asymptotic_value
     if nb_level == 1
-        [I_final, offset_map] = MinimizationOfEnergies (I, M, sigma2, tolerance, lambda, half_size_patch, median, average, poisson);
+        [I_final, offset_map] = MinimizationOfEnergies (I, M, sigma2, tolerance, lambda, half_size_patch, median, average, poisson);    
+    else %nblevel > 1
+        [I_final,offset_map] = multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson);
     end
-    % else %nblevel > 1
-    %     %appelermultiscale
 end
