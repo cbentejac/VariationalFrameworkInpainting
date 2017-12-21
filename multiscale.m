@@ -1,4 +1,4 @@
-function [u_l,phi_l] = multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2, lambda)
+function [u_l,phi_l] = multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson)
 
 [m,n,channel] = size (u0);
 r = (m*n/A)^(1/L);
@@ -45,7 +45,7 @@ for l = L:-1:1
     end
     
     %Solve with algorithm minimization energy at current level
-    [u_l,phi_l] = MinimizationOfEnergies(u_l, M_l, sigma2, tolerance, lambda, size_patch);
+    [u_l,phi_l] = MinimizationOfEnergies(u_l, M_l, sigma2, tolerance, lambda, size_patch, median, average, poisson);
     
 end
 
