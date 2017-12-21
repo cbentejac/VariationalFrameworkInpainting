@@ -6,7 +6,10 @@ for i=1:nb_iter
    Ap = (1-lambda) * div (gradx(kz.*gradx(uz)),grady(kz.*grady(uz)))-lambda*kz.*uz;
    r_t = permute (r,[2,1,3]);
    p_t = permute (p,[2,1,3]);
-   alpha = (r_t*r)./(p_t*Ap);
+   tmp(:,:,1) = p_t(:,:,1) * Ap(:,:,1);
+   tmp(:,:,2) = p_t(:,:,2) * Ap(:,:,2);
+   tmp(:,:,3) = p_t(:,:,3) * Ap(:,:,3);
+   alpha = (r_t*r)./tmp;
    uz = uz + alpha.*p;
    r1 = r - alpha.*Ap;
    if (norm(rk) < epsilon)
