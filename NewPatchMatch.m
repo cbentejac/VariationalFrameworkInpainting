@@ -7,6 +7,7 @@ tic;
     half_patch = floor(patch_size / 2);    
     pad_A = padarray(A, [half_patch half_patch], -1);
     pad_B = padarray(B, [half_patch half_patch], -1);
+    pad_B(mask == 1) = -1;
     
     % Handling the input given (or not) as parameters and correcting them
     % if required. In particular, we need an odd patch size since we are
@@ -43,26 +44,50 @@ tic;
             j = inpainting_domain(n, 2);
             [best_x, best_y, best_guess] = GetBestOffsets(NNF, i, j);
             
-            % Propagation with absolute coordinates.
-            % Left (odd) or right (even) propagation.
-            if (i - x_change) > 0 && (i - x_change) <= m
-                xp = NNF(i - x_change, j, 1) + x_change;
+            % Propagation (top or bottom).
+            if i - x_change > 0 && i - x_change <= m
+                xp = NNF(i - x_change, j, 1);
                 yp = NNF(i - x_change, j, 2);
                 if xp <= size(B, 1) && xp > 0
                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
                 end
             end
-
-            % Top (odd) or bottom (even) propagation.
-            if (j - y_change) > 0 && (j - y_change) <= n
+            
+            % Propagation (left or right).
+            if j - y_change > 0 && j - y_change <= m
                 xp = NNF(i, j - y_change, 1);
-                yp = NNF(i, j - y_change, 2) + y_change;
+                yp = NNF(i, j - y_change, 2);
                 if yp <= size(B, 2) && yp > 0
                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
                 end
             end
-        
+            
             [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch);
+            
+%             % Propagation with absolute coordinates.
+%             % Left (odd) or right (even) propagation.
+%             if (i - x_change) > 0 && (i - x_change) <= m
+%                 xp = NNF(i - x_change, j, 1);% + x_change;
+%                 yp = NNF(i - x_change, j, 2);
+%                 if xp <= size(B, 1) && xp > 0
+%                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
+%                 end
+%             end
+% 
+%             % Top (odd) or bottom (even) propagation.
+%             if (j - y_change) > 0 && (j - y_change) <= n
+%                 xp = NNF(i, j - y_change, 1);
+%                 yp = NNF(i, j - y_change, 2);% + y_change;
+%                 if yp <= size(B, 2) && yp > 0
+%                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
+%                 end
+%             end
+%         
+%             [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch);
+%             
+%             if mask(best_x, best_y) == 1
+%                 [best_x, best_y, best_guess] = GetBestOffsets(NNF, i, j);
+%             end
 
             % Updating the NNF accordingly by saving the new nearest-neighbour.
             NNF = UpdateNNF(NNF, i, j, best_x, best_y, best_guess);                
