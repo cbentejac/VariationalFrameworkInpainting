@@ -1,5 +1,5 @@
 function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median, average, poisson)
-    [m1,n,~] = size (u_hat);
+    [m1,n,c] = size (u_hat);
     m = zeros(m1,n);
     Mask = repmat (Mask,[1,1,3]);
     if (poisson == 1 || average == 1)
@@ -9,7 +9,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
                 tmp = phi (x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
                 delta = tmp(:,:,3);
                 delta = repmat (delta, [1,1,3]);
-                g = gaussian (half_size_patch, sigma2);
+                g = gaussian (half_size_patch, sigma2,c);
                 m(x,y) = sum (sum (sum (g.*delta.*X)));
                 %tmp2 = sum(delta,3);
                 %m(x,y) = sum(tmp2(:));
