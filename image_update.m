@@ -1,19 +1,42 @@
-function u = image_update (phi,u_hat,Mask,size_patch,sigma2)
-[m1,n,c] = size (u_hat);
-m = zeros(m1,n);
-Mask = repmat (Mask,[1,1,3]);
-for x=1+size_patch:m1-size_patch
-    for y=1+size_patch:n-size_patch
-        X = Mask(x-size_patch:x+size_patch,y-size_patch:y+size_patch,:);
-        delta = phi (x-size_patch:x+size_patch,y-size_patch:y+size_patch,:);
-        g = gaussian (size_patch, sigma2);
-        m(x,y) = sum (sum (sum (g.*delta.*X)));
+function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, median, average, poisson)
+    [m1,n,~] = size (u_hat);
+    m = zeros(m1,n);
+    Mask = repmat (Mask,[1,1,3]);
+    if (poisson == 1 || average == 1)
+        for x=1+half_size_patch:m1-half_size_patch
+            for y=1+half_size_patch:n-half_size_patch
+                X = Mask(x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                delta = phi (x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                g = gaussian (half_size_patch, sigma2);
+                m(x,y) = sum (sum (sum (g.*delta.*X)));
+            end
+        end
+        m = repmat (m,[1,1,3]);
+        kz = sum(m(:));
+        fz = (1/kz) * sum (sum (m.*u_hat));
+        vz = (1/kz) * sum(sum(m.*(gradx(u_hat)+grady(u_hat))));
+        u = gradient_conjugue (u_hat, epsilon, lambda, kz, fz, vz, 100);
+        u(Mask==0) = u_hat;
     end
-end
-m = repmat (m,[1,1,3]);
-kz = sum(m(:));
-fz = (1/kz) * sum (sum (m.*u_hat));
-vz = (1/kz) * sum(sum(m.*(gradx(u_hat)+grady(u_hat))));
-u = gradient_conjugue (u_hat, epsilon, lambda, kz, fz, vz, nb_iter);
-u(Mask==0) = u_hat;
+    if (median == 1)
+        u = zeros(size(u_hat));
+        for i=1+half_size_patch:m1-half_size_patch
+            for j=1+half_size_patch:n-half_size_patch
+                p = u_hat(i-half_size_patch:i+half_size_patch,j-half_size_patch:j+half_size_patch,:);
+                p = sum(p,3);
+                [p_sorted,index] = sort(p(:));
+                %weight = ;
+                total_weight = sum(weight(:));
+                sum = 0;
+                cnt = 1;
+                tmp = index(cnt);
+                while sum < total_weight/2
+                    sum = sum + weight(tmp);
+                    tmp = index (cnt+1);
+                    cnt = cnt+1;
+                end
+                u(i,j,:) = p_sorted(index(cnt));                
+            end
+        end
+    end
 end
