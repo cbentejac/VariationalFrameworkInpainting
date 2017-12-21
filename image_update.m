@@ -6,9 +6,13 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, median, averag
         for x=1+half_size_patch:m1-half_size_patch
             for y=1+half_size_patch:n-half_size_patch
                 X = Mask(x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
-                delta = phi (x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                tmp = phi (x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
+                delta = tmp(:,:,3);
+                delta = repmat (delta, [1,1,3]);
                 g = gaussian (half_size_patch, sigma2);
                 m(x,y) = sum (sum (sum (g.*delta.*X)));
+                %tmp2 = sum(delta,3);
+                %m(x,y) = sum(tmp2(:));
             end
         end
         m = repmat (m,[1,1,3]);
@@ -27,11 +31,11 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, median, averag
                 [p_sorted,index] = sort(p(:));
                 %weight = ;
                 total_weight = sum(weight(:));
-                sum = 0;
+                sum1 = 0;
                 cnt = 1;
                 tmp = index(cnt);
-                while sum < total_weight/2
-                    sum = sum + weight(tmp);
+                while sum1 < total_weight/2
+                    sum1 = sum1 + weight(tmp);
                     tmp = index (cnt+1);
                     cnt = cnt+1;
                 end
