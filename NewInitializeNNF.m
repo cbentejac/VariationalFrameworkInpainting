@@ -4,11 +4,12 @@ function [NNF] = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch)
     offset_x = randi([1 size(B, 1)], m, n);
     offset_y = randi([1 size(B, 2)], m, n); 
     % Random offsets.
-    while mask(offset_x, offset_y) == 1
-        disp('Offset in the wrong region');
-        offset_x = randi([1 size(B, 1)], m, n);
-        offset_y = randi([1 size(B, 2)], m, n);    
-    end
+    [row, col] = find(mask == 0);
+    random_indices = randi([1 length(row)], m, n);
+    
+    offset_x = row(random_indices);
+    offset_y = col(random_indices);
+
     NNF(:, :, 1) = offset_x;
     NNF(:, :, 2) = offset_y;
         
