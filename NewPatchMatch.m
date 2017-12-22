@@ -1,4 +1,4 @@
-function NNF = PatchMatch(A, B, mask, patch_size, iterations, NNF)
+function NNF = PatchMatch(A, B, mask, patch_size, iterations, error, lambda, NNF)
 tic;
     A = double(A);
     B = double(B);
@@ -12,9 +12,9 @@ tic;
     % Handling the input given (or not) as parameters and correcting them
     % if required. In particular, we need an odd patch size since we are
     % centering the patches on the pixel we are trying to fill.
-    if nargin == 5
+    if nargin == 7
         % Initializing the NNF.
-        NNF = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch);
+        NNF = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda);
     end
     
     [m, n, ~] = size(A); 
@@ -49,7 +49,7 @@ tic;
                 xp = NNF(i - x_change, j, 1);
                 yp = NNF(i - x_change, j, 2);
                 if xp <= size(B, 1) && xp > 0
-                    [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
+                    [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch, error, lambda);
                 end
             end
             
@@ -58,11 +58,11 @@ tic;
                 xp = NNF(i, j - y_change, 1);
                 yp = NNF(i, j - y_change, 2);
                 if yp <= size(B, 2) && yp > 0
-                    [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
+                    [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch, error, lambda);
                 end
             end
             
-            [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch);
+            [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch, error, lambda);
             
 %             % Propagation with absolute coordinates.
 %             % Left (odd) or right (even) propagation.

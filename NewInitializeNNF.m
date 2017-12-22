@@ -1,4 +1,4 @@
-function [NNF] = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch)
+function [NNF] = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda)
     [m, n, ~] = size(A);
 
     offset_x = randi([1 size(B, 1)], m, n);
@@ -22,7 +22,7 @@ function [NNF] = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch)
     % channel.
     for i = 1 + half_patch : m + half_patch
         for j = 1 + half_patch : n + half_patch                        
-            NNF(i - half_patch, j - half_patch, 3) = Distance(pad_A, pad_B, i, j, pad_offset_x(i, j) + half_patch, pad_offset_y(i, j) + half_patch, half_patch);
+            NNF(i - half_patch, j - half_patch, 3) = Distance(pad_A, pad_B, i, j, pad_offset_x(i, j) + half_patch, pad_offset_y(i, j) + half_patch, half_patch, error, lambda);
         end
     end    
 end
