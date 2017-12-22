@@ -2,8 +2,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
     [m1,n,c] = size (u_hat);
     m = zeros(m1,n);
     Mask = repmat (Mask,[1,1,3]);
-    if (poisson == 1 || average == 1)
-        for x=1+half_size_patch:m1-half_size_patch
+    for x=1+half_size_patch:m1-half_size_patch
             for y=1+half_size_patch:n-half_size_patch
                 X = Mask(x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
                 tmp = phi (x-half_size_patch:x+half_size_patch,y-half_size_patch:y+half_size_patch,:);
@@ -15,6 +14,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
                 %m(x,y) = sum(tmp2(:));
             end
         end
+    if (poisson == 1 || average == 1)
         m = repmat (m,[1,1,3]);
         F = zeros (size (m));
         K = zeros (size (m));
@@ -30,9 +30,6 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
                 Vy(x,y,:) = (1/K(x,y,:)).* sum(sum(tmp_m.*grady(tmp_u)));
             end
         end
-        %kz = sum(m(:));
-        %fz = (1/kz) * sum(sum (sum (m.*u_hat)));
-        %vz = (1/kz) * sum(sum(sum(m.*(gradx(u_hat)+grady(u_hat)))));
         u = gradient_conjugue (u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
         u(Mask==0) = u_hat(Mask==0);
     end
@@ -43,7 +40,7 @@ function u = image_update (phi,u_hat,Mask,half_size_patch,sigma2, lambda, median
                 p = u_hat(i-half_size_patch:i+half_size_patch,j-half_size_patch:j+half_size_patch,:);
                 p = sum(p,3);
                 [p_sorted,index] = sort(p(:));
-                %weight = ;
+                weight = m(i-half_size_patch:i+half_size_patch,j-half_size_patch:j+half_size_patch,:);
                 total_weight = sum(weight(:));
                 sum1 = 0;
                 cnt = 1;
