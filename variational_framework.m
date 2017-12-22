@@ -4,6 +4,7 @@ function [offset_map, I_final] = variational_framework (I_init, Mask, lambda, si
     half_patch_size = (size_patch - 1)/2;
     I = bord (I, half_patch_size);
     M = bord (M, half_patch_size);
+    [m,n,~] = size(I);
     sigma2 = 0.5;
     tolerance = 0.01;
     A = 0.15;
@@ -14,4 +15,5 @@ function [offset_map, I_final] = variational_framework (I_init, Mask, lambda, si
     else %nblevel > 1
         [I_final,offset_map] = multiscale(u0, M, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson);
     end
+    I_final = I_final(1+half_patch_size:m-half_patch_size,1+half_patch_size:n-half_patch_size,:);
 end
