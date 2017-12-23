@@ -1,4 +1,4 @@
-function NNF = PatchMatch(A, B, mask, patch_size, iterations, error, lambda, NNF)
+function NNF = NewPatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
 tic;
     A = double(A);
     B = double(B);
@@ -64,31 +64,6 @@ tic;
             
             [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch, error, lambda);
             
-%             % Propagation with absolute coordinates.
-%             % Left (odd) or right (even) propagation.
-%             if (i - x_change) > 0 && (i - x_change) <= m
-%                 xp = NNF(i - x_change, j, 1);% + x_change;
-%                 yp = NNF(i - x_change, j, 2);
-%                 if xp <= size(B, 1) && xp > 0
-%                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
-%                 end
-%             end
-% 
-%             % Top (odd) or bottom (even) propagation.
-%             if (j - y_change) > 0 && (j - y_change) <= n
-%                 xp = NNF(i, j - y_change, 1);
-%                 yp = NNF(i, j - y_change, 2);% + y_change;
-%                 if yp <= size(B, 2) && yp > 0
-%                     [best_x, best_y, best_guess] = ImproveGuess(pad_A, pad_B, i + half_patch, j + half_patch, xp, yp, best_guess, best_x, best_y, half_patch);
-%                 end
-%             end
-%         
-%             [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch);
-%             
-%             if mask(best_x, best_y) == 1
-%                 [best_x, best_y, best_guess] = GetBestOffsets(NNF, i, j);
-%             end
-
             % Updating the NNF accordingly by saving the new nearest-neighbour.
             NNF = UpdateNNF(NNF, i, j, best_x, best_y, best_guess);                
         end         
