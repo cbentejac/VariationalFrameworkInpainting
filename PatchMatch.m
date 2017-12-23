@@ -1,10 +1,9 @@
-function NNF = NewPatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
+function NNF = PatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
 tic;
     A = double(A);
     B = double(B);
     
     % Initializing the virtually padded images and the half_patch variable.
-    half_patch = floor(patch_size / 2);    
     pad_A = padarray(A, [half_patch half_patch], -1);
     pad_B = padarray(B, [half_patch half_patch], -1);
     pad_B(mask == 1) = -1;
@@ -14,7 +13,7 @@ tic;
     % centering the patches on the pixel we are trying to fill.
     if nargin == 7
         % Initializing the NNF.
-        NNF = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda);
+        NNF = InitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda);
     end
     
     [m, n, ~] = size(A); 
@@ -62,7 +61,7 @@ tic;
                 end
             end
             
-            [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch, error, lambda);
+            [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, mask, i + half_patch, j + half_patch, best_x, best_y, best_guess, A, half_patch, error, lambda);
             
             % Updating the NNF accordingly by saving the new nearest-neighbour.
             NNF = UpdateNNF(NNF, i, j, best_x, best_y, best_guess);                

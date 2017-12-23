@@ -2,7 +2,7 @@
 % search to improve the current best offsets. To do so, select pixels
 % randomly within a decreasing window and see if they are a better fit or
 % not.
-function [best_x, best_y, best_guess] = NewRandomSearch(pad_A, pad_B, mask, i, j, best_x, best_y, best_guess, A, half_patch, error, lambda)
+function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, mask, i, j, best_x, best_y, best_guess, A, half_patch, error, lambda)
     % Initializing the beginning of random search (max
     % iterations).
     [m, n, ~] = size(A);

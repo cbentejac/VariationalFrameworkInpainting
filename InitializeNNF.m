@@ -1,4 +1,4 @@
-function [NNF] = NewInitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda)
+function [NNF] = InitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda)
     [m, n, ~] = size(A);
 
     offset_x = randi([1 size(B, 1)], m, n);
