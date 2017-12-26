@@ -20,15 +20,26 @@ function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, mask, i, j, b
         y_min = max(best_y - rs_start, 1);
         y_max = min(best_y + rs_start, n);
         
-        % Generating the random candidates.
-        xp = mod(x_min + randi(rand_max), abs(x_max - x_min));
-        yp = mod(y_min + randi(rand_max), abs(y_max - y_min));
+        % Avoiding 0s to make sure the modulo won't be 0.
+        abs_xp = abs(x_max - x_min);
+        abs_yp = abs(y_max - y_min);
+        if abs_xp == 0
+            abs_xp = abs_xp + 1;
+        end
+        if abs_yp == 0
+            abs_yp = abs_yp + 1;
+        end
+        
+        % Generating the random candidates.        
+        xp = mod(x_min + randi(rand_max), abs_xp);
+        yp = mod(y_min + randi(rand_max), abs_yp);
         if xp == 0
             xp = 1;
         end
         if yp == 0
             yp = 1;
         end
+        
         while mask(xp, yp) == 1
             xp = mod(x_min + randi(rand_max), abs(x_max - x_min));
             yp = mod(y_min + randi(rand_max), abs(y_max - y_min));
