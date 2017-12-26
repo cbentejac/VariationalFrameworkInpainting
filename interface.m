@@ -186,10 +186,12 @@ if (lambda > 1 || lambda < 0)
     errordlg ('Lambda must be real between 0 and 1','Error','modal');
     return
 end
-msgbox ('In process');
+in_process = msgbox('In process');
 %appel de la fonction variationnal framework
-[I_final,~] = variational_framework (I, M, lambda, size_patch, L, median, average, poisson);
-msgbox ('It''s done :)');
+[~, I_final] = VariationalFramework (I, M, size_patch, L, lambda, median, average, poisson);
+delete(in_process);
+clear in_process;
+msgbox ('It is done :)');
 figure
 imagesc (I_final)
 
