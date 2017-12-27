@@ -14,8 +14,8 @@ for hy=-half_ps:half_ps
     nny = phi(centerx,centery,2);
     
     centerhat_x = zx_hat - hx;
-    centerhat_y = zy_hat - hy; %(centerhat_x,centerhat_y) is the center of patch,
-                               % if which has (zx_hat,zy_hat) at the same
+    centerhat_y = zy_hat - hy; %(centerhat_x,centerhat_y) is the center of patch.
+                               % If this patch has (zx_hat,zy_hat) at the same
                                % relative position as (zx,zy) to
                                % patch(centerx,centery),
                                % than the pair (zx,zy)(zx_hat,zy_hat)
