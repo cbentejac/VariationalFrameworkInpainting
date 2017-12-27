@@ -1,3 +1,10 @@
+% Given an image "A" to rebuild partially and image "B" to build from, a 
+% region "mask" in A to rebuild, and "half_patch" the size of half a patch
+% side in the image, computes the nearest-neighbor field of A in B using
+% the "error" similarity metric (0, 1 or 2) in "iterations" iterations.
+% "lambda" is used for the Poisson metric. If provided, "NNF" is the
+% nearest-neighbor field used to start the computations (if not provided,
+% the returned NNF is randomly initialized).
 function NNF = PatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
 tic;
     A = double(A);
@@ -13,7 +20,7 @@ tic;
     % centering the patches on the pixel we are trying to fill.
     if nargin == 7
         % Initializing the NNF.
-        NNF = InitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda);
+        NNF = InitializeNNF(A, mask, pad_A, pad_B, half_patch, error, lambda);
     end
     
     [m, n, ~] = size(A); 

@@ -1,7 +1,14 @@
-function [NNF] = InitializeNNF(A, B, mask, pad_A, pad_B, half_patch, error, lambda)
+% Given an image "A" to rebuild in, assuming image B to rebuild from and
+% given "mask", the region of A to rebuild, randomly initialize offsets and
+% computes the similarity between patches centered in A and centered in B
+% at the assigned offset location. "pad_A" and "pad_B" are virtually
+% extended versions of A and B, "half_patch" is the size of half a patch
+% side, "error" is the similarity metric to be used (0, 1 or 2) and
+% "lambda" is used for Poisson metric.
+function [NNF] = InitializeNNF(A, mask, pad_A, pad_B, half_patch, error, lambda)
     [m, n, ~] = size(A);
 
-    % Random offsets.
+    % Random offsets, located outside of the region to fill.
     [row, col] = find(mask == 0);
     random_indices = randi([1 length(row)], m, n);
     

@@ -1,7 +1,15 @@
 % Assuming the propagation phase has been done, process with the random
 % search to improve the current best offsets. To do so, select pixels
 % randomly within a decreasing window and see if they are a better fit or
-% not.
+% not. "pad_A" and "pad_B" are respectively the virtually extended image to
+% rebuild in and virtually extended image to rebuild from. "mask" is the
+% region in pad_A to rebuild. The pixel ("i", "j") is the one for which we
+% are trying to improve the current offset. "best_x", "best_y" and
+% "best_guess" are respectively the x-position of the current best offset,
+% the y-position of the current best offset and the similarity value for
+% the current best offset. "A" is the original image to rebuild in, with
+% "half_patch" the size of half a patch side, "error" the similarity metric
+% to use (0, 1 or 2) and "lambda" a value to use the Poisson metric with.
 function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, mask, i, j, best_x, best_y, best_guess, A, half_patch, error, lambda)
     % Initializing the beginning of random search (max
     % iterations).

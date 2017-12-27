@@ -121,30 +121,30 @@ function pushbutton1_Callback( ~, ~, handles)
 median = 0;
 average = 0;
 poisson = 0;
-choix1 = get (handles.uibuttongroup1, 'SelectedObject');
-choix2 = char (get (choix1, 'String'));
-if (strcmp (choix2, 'Median'))
+choice1 = get(handles.uibuttongroup1, 'SelectedObject');
+choice2 = char(get(choice1, 'String'));
+if (strcmp(choice2, 'Median'))
     median = 1;
 end
-if (strcmp (choix2, 'Mean'))
+if (strcmp(choice2, 'Mean'))
     average = 1;
 end
-if (strcmp (choix2, 'Poisson'))
+if (strcmp(choice2, 'Poisson'))
     poisson = 1;
 end
-%récupération image et mask
-name_image = get(handles.edit1,'string');
-if (~exist (char(name_image)))
-    errordlg ('Impossible to read the image', 'Error', 'modal');
+% Fetching image and mask
+name_image = get(handles.edit1, 'string');
+if (~exist(char(name_image)))
+    errordlg('Could not read the image...', 'Error', 'modal');
     return
 end
 I = imread(char(name_image));
-choix1_mask = get(handles.uibuttongroup2,'SelectedObject');
-choix2_mask = char (get (choix1_mask, 'String'));
-name_mask = get(handles.edit2,'string');
-if (strcmp(choix2_mask,'Yes'))
-    if (~exist (char(name_mask)))
-        errordlg ('Impossible to read the mask', 'Error', 'modal');
+choice1_mask = get(handles.uibuttongroup2, 'SelectedObject');
+choice2_mask = char(get(choice1_mask, 'String'));
+name_mask = get(handles.edit2, 'string');
+if (strcmp(choice2_mask, 'Yes'))
+    if (~exist(char(name_mask)))
+        errordlg('Could not read the mask...', 'Error', 'modal');
         return
     end
     M = imread(char(name_mask));
@@ -153,24 +153,24 @@ else
     M = roipoly(I);
     close
 end
-%récupération paramètres + vérification entrées de l'utilisateur
-[m,n,~] = size(I);
+% Fetching parameters + checking user's input
+[m, n, ~] = size(I);
 size_patch = str2double(get(handles.edit6, 'string'));
 if (isnan(size_patch))
-    errordlg ('The size of the patch must be an integer','Error','modal');
+    errordlg('The size of the patch must be an integer!', 'Error', 'modal');
     return
 end
-if (mod(size_patch,2) == 0)
-   errordlg ('The size of the patch must be odd','Error','modal');
+if (mod(size_patch, 2) == 0)
+   errordlg('The size of the patch must be odd!', 'Error', 'modal');
    return
 end
 if (size_patch > m || size_patch > n || size_patch < 0)
-    errordlg ('The size of the patch must be an integer greater than or equal to 0','Error','modal');
+    errordlg('The size of the patch must be an odd integer greater than or equal to 0!', 'Error', 'modal');
     return
 end
 L = str2double(get(handles.edit5, 'string'));
 if (isnan(L) || L <= 0)
-    errordlg ('The number of level for multiscale scheme must be an integer greater than or equal to 1','Error','modal');
+    errordlg ('The number of level for multiscale scheme must be an integer greater than or equal to 1!', 'Error', 'modal');
     return
 end
 if (poisson == 1)
@@ -179,22 +179,21 @@ else
     lambda = 1;
 end
 if (isnan(lambda))
-    errordlg ('Lambda must be a real','Error','modal');
+    errordlg('Lambda must be a real number!', 'Error', 'modal');
     return
 end
 if (lambda > 1 || lambda < 0)
-    errordlg ('Lambda must be real between 0 and 1','Error','modal');
+    errordlg('Lambda must be a real number between 0 and 1!', 'Error', 'modal');
     return
 end
 in_process = msgbox('In process');
 %appel de la fonction variationnal framework
-[~, I_final] = VariationalFramework (I, M, size_patch, L, lambda, median, average, poisson);
+[~, I_final] = VariationalFramework(I, M, size_patch, L, lambda, median, average, poisson);
 delete(in_process);
 clear in_process;
-msgbox ('It is done :)');
+msgbox('It is done :)');
 figure
-imagesc (I_final)
-
+imagesc(I_final)
 
 
 function edit1_Callback(~, ~, ~)
@@ -216,8 +215,8 @@ function edit1_CreateFcn(hObject, ~, ~)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+if ispc && isequal(get(hObject, 'BackgroundColor'), get(0, 'defaultUicontrolBackgroundColor'))
+    set(hObject, 'BackgroundColor', 'white');
 end
 
 
@@ -241,10 +240,9 @@ function edit2_CreateFcn(hObject, ~, ~)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+if ispc && isequal(get(hObject, 'BackgroundColor'), get(0, 'defaultUicontrolBackgroundColor'))
+    set(hObject, 'BackgroundColor', 'white');
 end
-
 
 
 function edit3_Callback(~, ~, ~)
@@ -266,8 +264,8 @@ function edit3_CreateFcn(hObject, ~, ~)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+if ispc && isequal(get(hObject, 'BackgroundColor'), get(0, 'defaultUicontrolBackgroundColor'))
+    set(hObject, 'BackgroundColor', 'white');
 end
 
 function edit5_Callback( ~, ~, ~)
@@ -289,10 +287,9 @@ function edit5_CreateFcn(hObject, ~, ~)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+if ispc && isequal(get(hObject, 'BackgroundColor'), get(0, 'defaultUicontrolBackgroundColor'))
+    set(hObject, 'BackgroundColor', 'white');
 end
-
 
 
 function edit6_Callback( ~, ~, ~)
@@ -314,8 +311,8 @@ function edit6_CreateFcn(hObject, ~, ~)
 
 % Hint: edit controls usually have a white background on Windows.
 %       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
+if ispc && isequal(get(hObject, 'BackgroundColor'), get(0, 'defaultUicontrolBackgroundColor'))
+    set(hObject, 'BackgroundColor', 'white');
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -331,13 +328,13 @@ function uipushtool1_ClickedCallback(hObject, eventdata, handles)
 % hObject    handle to uipushtool1 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-msg =  {'Usage for Variational Framework for Non-Local Inpainting',...
-    '',...
-    'The panel method allow to choose the patch error function between Median, Mean and Poisson.',...
-    'The panel parameters allows to choose differents parameters :',...
-    '   -Lambda must be a real number between 0 et 1.',...
-    '   -The number of level for the multiscale scheme must be a integer greater than or equal to 1.',...
-    '   -The size of the patch must be an odd integer greater than or equal to 1 and lower than the size of the image.',...
-    'The panel image allows to give the name of the input image.',...
+msg =  {'Usage for Variational Framework for Non-Local Inpainting', ...
+    '', ...
+    'The panel method allow to choose the patch error function between Median, Mean and Poisson.', ...
+    'The panel parameters allows to choose differents parameters :', ...
+    '   - Lambda must be a real number between 0 et 1.', ...
+    '   - The number of level for the multiscale scheme must be a integer greater than or equal to 1.', ...
+    '   - The size of the patch must be an odd integer greater than or equal to 1 and lower than the size of the image.', ...
+    'The panel image allows to give the name of the input image.', ...
     'The panel mask allows to give the name of the file of the input mask. Give a mask is optinal, the user have to precise if he gives a mask or not using the radio button Yes and No.'};
 helpdlg (msg, 'Usage');

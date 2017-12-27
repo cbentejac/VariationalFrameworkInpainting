@@ -16,7 +16,7 @@ This MATLAB implementation of the variational framework for non-local inpainting
 - [ ] Make it work.
 
 ## To do (if enough time left)
-- [ ] Write the patch error function `E` for the patch non-local means
+- [x] Write the patch error function `E` for the patch non-local means
 - [x] Write the patch error function `E` for the patch non-local medians
 - [x] Add the new patch error functions to the patch match algorithm and make them a parameter
 - [x] Add the possibility for the user to choose which patch error function to use
