@@ -23,7 +23,7 @@ function uz=image_update(u0,phi,mask,lambda,confidence_mask,patch_size,sigma)
 
 %%
 u0=double(u0);
-[h,w]=size(u0);
+[h,w,~]=size(u0);
 
 %% ------------------ Calculate coefficiets of linear equations -------------------
 %% Get domains O,Oc,Oe
