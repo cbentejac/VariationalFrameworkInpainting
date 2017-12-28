@@ -67,15 +67,17 @@ for i=1:length(O)
 end
 
 %% Compute b(coefficient of linear equations)
-matb = (1-lambda)*div(kv(:,:,1),kv(:,:,2))-lambda*kf;
-matb(~mask) = u0(~mask);
+matb = -(1-lambda)*div(kv(:,:,1),kv(:,:,2))+lambda*kf-lambda*kz.*u0 + (1-lambda)*div(gradux,graduy);
+matb(~mask) = 0;
+
 %% ---------- Solve linear equations using conjugate gradient algorithm -----------
 %%
 uz = u0.*~mask;
 
 % initializations
 % r = b - A.x ; nr = |r| ; p = r
-r = matb - (1-lambda)*div(kz.*gradx(uz),kz.*grady(uz)) + lambda*kz.*uz;
+r = matb + (1-lambda)*div(kz.*gradx(uz),kz.*grady(uz)) - lambda*kz.*uz;
+r = r.*mask;
 nr = norm(r(indexz),2);
 p = r;
 
@@ -87,14 +89,14 @@ stop = (nr < epsilon)||(nb_iter >= 1e6);
 while ~stop
     
     %alpha = r'.r / p'.A.p
-    Ap = (1-lambda)*div(kz.*gradx(p),kz.*grady(p)) + lambda*kz.*p;    
+    Ap = -(1-lambda)*div(kz.*gradx(p),kz.*grady(p)) + lambda*kz.*p;    
     alpha = nr^2/ sum(sum(p.* Ap));
     
     % x = x + alpha*p
     uz = uz + alpha * p;
     
     % r = b - A.x ; nr = |r|
-    r =  matb - (1-lambda)*div(kz.*gradx(uz),kz.*grady(uz)) + lambda*kz.*uz;    
+    r =  matb + (1-lambda)*div(kz.*gradx(uz),kz.*grady(uz)) - lambda*kz.*uz;    
     nr = norm(r(indexz),2);
     
     % beta = nr^2/nr_old^2 ; p = r + beta*p
@@ -105,9 +107,13 @@ while ~stop
     nb_iter = nb_iter + 1;
     stop = (nr < epsilon)||(nb_iter >= 1e6);
     
-    if mod(nb_iter,5000) ==0, disp(nr),end
+    if mod(nb_iter,5000) ==0,disp(nr); end
 
+    
 end
 
-end
+uz=u0+uz.*mask;
+uz = max(u0(:))*(uz-min(uz(:)))/range(uz(:));
+uz(~mask)=u0(~mask);
 
+end
