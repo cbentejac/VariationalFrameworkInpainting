@@ -60,7 +60,7 @@ tic;
             end
             
             % Propagation (left or right).
-            if j - y_change > 0 && j - y_change <= m
+            if j - y_change > 0 && j - y_change <= n
                 xp = NNF(i, j - y_change, 1);
                 yp = NNF(i, j - y_change, 2);
                 if yp <= size(B, 2) && yp > 0
