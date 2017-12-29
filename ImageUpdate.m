@@ -9,6 +9,7 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
     m = zeros(m1, n);
     Mask = repmat(Mask, [1, 1, 3]);
     
+    %computation of weights m_zzhat, we need it for each method (poisson, median, mean);
     for x = 1 + half_patch_size : m1 - half_patch_size
         for y = 1 + half_patch_size : n - half_patch_size
             X = Mask(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
@@ -28,6 +29,7 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
         K = zeros(size(m));
         Vx = zeros(size(m));
         Vy = zeros(size(m));
+        %computation i=of vz, fz and kz for each z in the image
         for x = 1 + half_patch_size : m1 - half_patch_size
             for y = 1 + half_patch_size : n-half_patch_size
                 tmp_m = m(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
@@ -38,6 +40,7 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
                 Vy(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* grady(tmp_u)));
             end
         end
+        %solve the linear equation with gradient conjugue algorithm
         u = gradient_conjugue(u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
         u(Mask == 0) = u_hat(Mask == 0);
     end
@@ -46,6 +49,7 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
         u = zeros(size(u_hat));
         for i = 1 + half_patch_size : m1 - half_patch_size
             for j = 1 + half_patch_size : n - half_patch_size
+                %sort the value of the patch
                 p = u_hat(i - half_patch_size : i + half_patch_size, j - half_patch_size : j + half_patch_size, :);
                 p = sum(p, 3);
                 [p_sorted, index] = sort(p(:));
@@ -54,6 +58,7 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
                 sum1 = 0;
                 cnt = 1;
                 tmp = index(cnt);
+                %we choose the value of u_zzhat such that sum(weight) = total_weight/2
                 while sum1 < total_weight / 2
                     sum1 = sum1 + weight(tmp);
                     tmp = index(cnt+1);
