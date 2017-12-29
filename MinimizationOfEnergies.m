@@ -40,7 +40,7 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, M, sigma2, tolerance, lam
         decay_time = 5;
         asymptotic_value = 5;
         
-        confidence_mask = calculate_confidence_mask(M, decay_time, asymptotic_value);
+        confidence_mask = ConfidenceMask(M, decay_time, asymptotic_value);
         
         % Image update
         tmp_offset = padarray(offset_map, [half_patch_size, half_patch_size], -1);

@@ -1,4 +1,4 @@
-function [u_l, phi_l] = multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson)
+function [u_l, phi_l] = Multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson)
 
     [m, n, channel] = size(u0);
     r = (m * n / A)^(1 / L);
