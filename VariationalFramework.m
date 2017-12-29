@@ -22,7 +22,7 @@ function [offset_map, I_final] = VariationalFramework(I_init, Mask, size_patch, 
     else %nblevel > 1
         % Might need to re-add the borders for I and M here
         % since i haven't dived into the multiscale implementation yet
-        [I_final, offset_map] = multiscale(I, M, size_patch, L, A, tolerance, sigma2, lambda, median, average, poisson);
+        [I_final, offset_map] = multiscale(I, M, size_patch, nb_level, A, tolerance, sigma2, lambda, median, average, poisson);
     end
 %     I_final = I_final(1 + half_patch_size : m - half_patch_size, 1 + half_patch_size : n - half_patch_size, :);
 end
