@@ -1,2 +1,9 @@
 I tried to code according to my understanding, but I didn't test formally, so I can not guarantee it work .
 But maybe it can give you inspiration^^.
+
+Image_update_mean(), that one I believe it works, maybe with low quality though.. So, if you want to test ohter functions and
+get some visually plausible results, it canbe uesd.
+
+As for the image_update, uh... I belive it can run, but maybe we can get something from it. 
+I am not sure with conjugate gradient algorithm. This version is the one I coded according to auther's code related to this part.
+I dont understand everything actually, but it can converge.
