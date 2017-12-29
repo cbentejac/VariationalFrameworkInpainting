@@ -9,6 +9,13 @@ for hy=-half_ps:half_ps
     
     centerx = zx - hx;
     centery = zy - hy; %(centerx,centery) is the center of current patch
+    
+    if centerx == 0
+        centerx = 1;
+    end
+    if centery == 0
+        centery = 1;
+    end
 
     nnx = phi(centerx,centery,1);
     nny = phi(centerx,centery,2);

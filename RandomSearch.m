@@ -48,6 +48,7 @@ function [best_x, best_y, best_guess] = RandomSearch(pad_A, pad_B, mask, i, j, b
             yp = 1;
         end
         
+        % Checking that the random candidate is not in the inpainting zone.
         while mask(xp, yp) == 1
             xp = mod(x_min + randi(rand_max), abs(x_max - x_min));
             yp = mod(y_min + randi(rand_max), abs(y_max - y_min));
