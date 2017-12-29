@@ -114,7 +114,6 @@ while ~stop
     
 end
 
-uz=u0+uz.*mask;
 uz = max(u0(:))*(uz-min(uz(:)))/range(uz(:));
 uz(~mask)=u0(~mask);
 
