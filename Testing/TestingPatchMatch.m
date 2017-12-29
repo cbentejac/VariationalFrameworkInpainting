@@ -1,9 +1,10 @@
 clear all
 close all
+addpath('../.')
 
 % Loading the source image and its mask, and computing the target image.
-source = imread('Images/kom07.png');
-mask = imread('Images/kom07_msk.png');
+source = imread('../Images/kom07.png');
+mask = imread('../Images/kom07_msk.png');
 target = source .* uint8(~mask);
 
 disp('Computing NNF for Medians...');
