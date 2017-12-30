@@ -6,7 +6,6 @@
 % nearest-neighbor field used to start the computations (if not provided,
 % the returned NNF is randomly initialized).
 function NNF = PatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
-tic;
     A = double(A);
     B = double(B);
     
@@ -73,7 +72,7 @@ tic;
             % Updating the NNF accordingly by saving the new nearest-neighbour.
             NNF = UpdateNNF(NNF, i, j, best_x, best_y, best_guess);                
         end         
+        
         k = k + 1;
     end
-    toc;
 end
