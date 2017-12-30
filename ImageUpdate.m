@@ -4,7 +4,7 @@
 % generation in similarity metrics, "lambda" is used for Poisson metric,
 % and "median", "average" and "poisson" are mutually exclusive booleans
 % used to determine which metric is to be used.
-function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, median, average, poisson)
+function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, error)
     [m1, n, c] = size(u_hat);
     m = zeros(m1, n);
     mask = repmat(mask, [1, 1, 3]);
@@ -22,30 +22,7 @@ function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, medi
         end
     end
     
-    if (poisson == 1 || average == 1)
-        m = repmat(m, [1, 1, 3]);
-        F = zeros(size(m));
-        K = zeros(size(m));
-        Vx = zeros(size(m));
-        Vy = zeros(size(m));
-        
-        % Computation i=of vz, fz and kz for each z in the image.
-        for x = 1 + half_patch_size : m1 - half_patch_size
-            for y = 1 + half_patch_size : n-half_patch_size
-                tmp_m = m(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
-                tmp_u = u_hat(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
-                K(x, y, :) = sum(sum(tmp_m));
-                F(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* tmp_u));
-                Vx(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* gradx(tmp_u)));
-                Vy(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* grady(tmp_u)));
-            end
-        end
-        % Solve the linear equation with conjugate gradient algorithm.
-        u = gradient_conjugue(u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
-        u(mask == 0) = u_hat(mask == 0);
-    end
-    
-    if (median == 1)
+    if (error == 0) % Medians
         u = zeros(size(u_hat));
         for i = 1 + half_patch_size : m1 - half_patch_size
             for j = 1 + half_patch_size : n - half_patch_size
@@ -68,7 +45,36 @@ function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, medi
                 u(i, j, :) = p_sorted(index(cnt));                
             end
         end
+        
+    else % Poisson or means
+        m = repmat(m, [1, 1, 3]);
+        F = zeros(size(m));
+        K = zeros(size(m));
+        Vx = zeros(size(m));
+        Vy = zeros(size(m));
+        
+        % Computation i=of vz, fz and kz for each z in the image.
+        for x = 1 + half_patch_size : m1 - half_patch_size
+            for y = 1 + half_patch_size : n-half_patch_size
+                tmp_m = m(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
+                tmp_u = u_hat(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
+                K(x, y, :) = sum(sum(tmp_m));
+                F(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* tmp_u));
+                Vx(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* gradx(tmp_u)));
+                Vy(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* grady(tmp_u)));
+            end
+        end
+        
+        K(isnan(K)) = 0;
+        F(isnan(F)) = 0;
+        Vx(isnan(Vx)) = 0;
+        Vy(isnan(Vy)) = 0;
+        % Solve the linear equation with conjugate gradient algorithm.
+        u = gradient_conjugue(u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
+        u(mask == 0) = u_hat(mask == 0);
     end
+    
+    
     
     % Cropping the image (removing the virtual borders) to get it back to
     % its normal size.

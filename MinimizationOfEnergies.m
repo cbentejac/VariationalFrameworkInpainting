@@ -13,13 +13,10 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
     % input.
     if median == 1
         error = 0;
-        disp('Median!');
     elseif average == 1
         error = 1;
-        disp('Mean!');
     else
         error = 2;
-        disp('Poisson!');
     end
     
     % While norm(u_(k+1) - u_k) < tolerance
@@ -30,9 +27,9 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         
         % Correspondance update
         if cnt == 1
-            offset_map = ParallelizedPatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
+            offset_map = ParallelizedPatchMatch(u_0, u_0 .* ~mask, mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
         else
-            offset_map = ParallelizedPatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda, offset_map);
+            offset_map = ParallelizedPatchMatch(u_0, u_0 .* ~mask, mask, half_patch_size, 1, error, lambda, offset_map);
         end
         disp('Passed PatchMatch!');
         
@@ -46,7 +43,7 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         tmp_offset = padarray(offset_map, [half_patch_size, half_patch_size], -1);
         tmp_u_hat = padarray(u_0 .* ~mask, [half_patch_size, half_patch_size], -1);
         tmp_mask = padarray(mask, [half_patch_size, half_patch_size], -1);
-        u = ImageUpdate(tmp_offset, tmp_u_hat, tmp_mask, half_patch_size, sigma2, lambda, median, average, poisson);
+        u = ImageUpdate(tmp_offset, tmp_u_hat, tmp_mask, half_patch_size, sigma2, lambda, error);
         
 %         u = image_update(tmp_u_hat, tmp_offset, tmp_mask, lambda, confidence_mask, half_patch_size, sigma2);
 %         u = image_update_mean(tmp_u_hat, tmp_offset, tmp_mask, confidence_mask, half_patch_size, sigma2);
