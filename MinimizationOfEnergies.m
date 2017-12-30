@@ -5,7 +5,7 @@
 % nearest-neighbors), and "median", "average" and "poisson" are mutually
 % exclusive booleans determining which similarity metric to use. "sigma2"
 % is the variance used for the Gaussian's creation in similarity metrics.
-function [u, offset_map] = MinimizationOfEnergies(u_0, M, sigma2, tolerance, lambda, half_patch_size, median, average, poisson)
+function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, lambda, half_patch_size, median, average, poisson)
     cnt = 1;
     u = u_0;
         
@@ -30,9 +30,9 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, M, sigma2, tolerance, lam
         
         % Correspondance update
         if cnt == 1
-            offset_map = PatchMatch(u_0, u_0 .* (1 - M), M, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
+            offset_map = PatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
         else
-            offset_map = PatchMatch(u_0, u_0 .* (1 - M), M, half_patch_size, 1, error, lambda, offset_map);
+            offset_map = PatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda, offset_map);
         end
         disp('Passed PatchMatch!');
         
@@ -40,12 +40,12 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, M, sigma2, tolerance, lam
         decay_time = 5;
         asymptotic_value = 5;
         
-        confidence_mask = ConfidenceMask(M, decay_time, asymptotic_value);
+        confidence_mask = ConfidenceMask(mask, decay_time, asymptotic_value);
         
         % Image update
         tmp_offset = padarray(offset_map, [half_patch_size, half_patch_size], -1);
-        tmp_u_hat = padarray(u_0 .* (1 - M), [half_patch_size, half_patch_size], -1);
-        tmp_mask = padarray(M, [half_patch_size, half_patch_size], -1);
+        tmp_u_hat = padarray(u_0 .* ~mask, [half_patch_size, half_patch_size], -1);
+        tmp_mask = padarray(mask, [half_patch_size, half_patch_size], -1);
         u = ImageUpdate(tmp_offset, tmp_u_hat, tmp_mask, half_patch_size, sigma2, lambda, median, average, poisson);
         
 %         u = image_update(tmp_u_hat, tmp_offset, tmp_mask, lambda, confidence_mask, half_patch_size, sigma2);

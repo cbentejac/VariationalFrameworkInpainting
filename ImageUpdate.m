@@ -4,22 +4,21 @@
 % generation in similarity metrics, "lambda" is used for Poisson metric,
 % and "median", "average" and "poisson" are mutually exclusive booleans
 % used to determine which metric is to be used.
-function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, median, average, poisson)
+function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, median, average, poisson)
     [m1, n, c] = size(u_hat);
     m = zeros(m1, n);
-    Mask = repmat(Mask, [1, 1, 3]);
+    mask = repmat(mask, [1, 1, 3]);
     
-    %computation of weights m_zzhat, we need it for each method (poisson, median, mean);
+    % Computation of weights m_zzhat: we need them for each method
+    % (poisson, median, mean).
     for x = 1 + half_patch_size : m1 - half_patch_size
         for y = 1 + half_patch_size : n - half_patch_size
-            X = Mask(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
+            X = mask(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
             tmp = phi(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
             delta = tmp(:, :, 3);
             delta = repmat(delta, [1, 1, 3]);
             g = gaussian(half_patch_size, sigma2, c);
             m(x,y) = sum(sum(sum(g .* delta .* X)));
-            %tmp2 = sum(delta,3);
-            %m(x,y) = sum(tmp2(:));
         end
     end
     
@@ -29,7 +28,8 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
         K = zeros(size(m));
         Vx = zeros(size(m));
         Vy = zeros(size(m));
-        %computation i=of vz, fz and kz for each z in the image
+        
+        % Computation i=of vz, fz and kz for each z in the image.
         for x = 1 + half_patch_size : m1 - half_patch_size
             for y = 1 + half_patch_size : n-half_patch_size
                 tmp_m = m(x - half_patch_size : x + half_patch_size, y - half_patch_size : y + half_patch_size, :);
@@ -40,9 +40,9 @@ function u = ImageUpdate(phi, u_hat, Mask, half_patch_size, sigma2, lambda, medi
                 Vy(x, y, :) = (1 / K(x, y, :)) .* sum(sum(tmp_m .* grady(tmp_u)));
             end
         end
-        %solve the linear equation with gradient conjugue algorithm
+        % Solve the linear equation with conjugate gradient algorithm.
         u = gradient_conjugue(u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
-        u(Mask == 0) = u_hat(Mask == 0);
+        u(mask == 0) = u_hat(mask == 0);
     end
     
     if (median == 1)
