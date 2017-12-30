@@ -43,7 +43,7 @@ subplot(2, 3, 3), imshow(ReconstructionFromNNF(source, target, NNF_poisson_3_par
 subplot(2, 3, 4), imshow(ReconstructionFromNNF(source, target, NNF_poisson_4_par)), title('Lambda = 0.3');
 subplot(2, 3, 5), imshow(ReconstructionFromNNF(source, target, NNF_poisson_5_par)), title('Lambda = 0.5');
 subplot(2, 3, 6), imshow(ReconstructionFromNNF(source, target, NNF_poisson_6_par)), title('Lambda = 0.8');
-%%
+
 % Compares 1 iteration between iterative and parallel patch match.
 disp('Computing first iteration with iterative patch match for each metric...');
 NNF_medians = PatchMatch(source, target, mask, 2, 1, 0, 0);

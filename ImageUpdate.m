@@ -65,10 +65,6 @@ function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, erro
             end
         end
         
-        K(isnan(K)) = 0;
-        F(isnan(F)) = 0;
-        Vx(isnan(Vx)) = 0;
-        Vy(isnan(Vy)) = 0;
         % Solve the linear equation with conjugate gradient algorithm.
         u = gradient_conjugue(u_hat, 0.1, lambda, K, F, Vx, Vy, 100);
         u(mask == 0) = u_hat(mask == 0);
