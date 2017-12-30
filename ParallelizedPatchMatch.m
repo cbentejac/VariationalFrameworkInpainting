@@ -24,11 +24,6 @@ tic;
     inpainting_domain = [row col];
     inpainting_domain = sortrows(inpainting_domain, 1);
     
-    % For hyperthreaded CPUs to work, we need to use a cluster profile and
-    % not the local ones which is set to the number of physical cores...
-    %     nb_cores = strsplit(evalc('feature(''numcores'')'));
-    %     nb_cores = str2double(nb_cores{14});
-    
     % Gets the number of available physical cores for parallelization and
     % start the parallel pool.
     nb_cores = maxNumCompThreads;
