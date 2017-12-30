@@ -43,3 +43,24 @@ subplot(2, 3, 3), imshow(ReconstructionFromNNF(source, target, NNF_poisson_3_par
 subplot(2, 3, 4), imshow(ReconstructionFromNNF(source, target, NNF_poisson_4_par)), title('Lambda = 0.3');
 subplot(2, 3, 5), imshow(ReconstructionFromNNF(source, target, NNF_poisson_5_par)), title('Lambda = 0.5');
 subplot(2, 3, 6), imshow(ReconstructionFromNNF(source, target, NNF_poisson_6_par)), title('Lambda = 0.8');
+%%
+% Compares 1 iteration between iterative and parallel patch match.
+disp('Computing first iteration with iterative patch match for each metric...');
+NNF_medians = PatchMatch(source, target, mask, 2, 1, 0, 0);
+NNF_means = PatchMatch(source, target, mask, 2, 1, 1, 0);
+NNF_poisson = PatchMatch(source, target, mask, 2, 1, 2, 0.5);
+disp('Computing first iteration with parallelized patch match for each metric...');
+NNF_medians_par_1 = ParallelizedPatchMatch(source, target, mask, 2, 1, 0, 0);
+NNF_means_par_1 = ParallelizedPatchMatch(source, target, mask, 2, 1, 1, 0);
+NNF_poisson_par_1 = ParallelizedPatchMatch(source, target, mask, 2, 1, 2, 0.5);
+
+% Displays the first iteration for each metric both for the parallel and 
+% iterative versions.
+figure;
+subplot(2, 3, 1), imshow(ReconstructionFromNNF(source, target, NNF_medians)), title('Median');
+subplot(2, 3, 2), imshow(ReconstructionFromNNF(source, target, NNF_means)), title('Mean');
+subplot(2, 3, 3), imshow(ReconstructionFromNNF(source, target, NNF_poisson)), title('Poisson');
+subplot(2, 3, 4), imshow(ReconstructionFromNNF(source, target, NNF_medians_par_1)), title('Median par');
+subplot(2, 3, 5), imshow(ReconstructionFromNNF(source, target, NNF_means_par_1)), title('Mean par');
+subplot(2, 3, 6), imshow(ReconstructionFromNNF(source, target, NNF_poisson_par_1)), title('Poisson par');
+
