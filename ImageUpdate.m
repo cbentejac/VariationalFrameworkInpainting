@@ -49,7 +49,7 @@ function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, medi
         u = zeros(size(u_hat));
         for i = 1 + half_patch_size : m1 - half_patch_size
             for j = 1 + half_patch_size : n - half_patch_size
-                %sort the value of the patch
+                % Sort the value of the patch.
                 p = u_hat(i - half_patch_size : i + half_patch_size, j - half_patch_size : j + half_patch_size, :);
                 p = sum(p, 3);
                 [p_sorted, index] = sort(p(:));
@@ -58,10 +58,11 @@ function u = ImageUpdate(phi, u_hat, mask, half_patch_size, sigma2, lambda, medi
                 sum1 = 0;
                 cnt = 1;
                 tmp = index(cnt);
-                %we choose the value of u_zzhat such that sum(weight) = total_weight/2
-                while sum1 < total_weight / 2
+                % We choose the value of u_zzhat such that sum(weight) =
+                % total_weight / 2.
+                while sum1 < total_weight / 2 && cnt + 1 <= length(index)
                     sum1 = sum1 + weight(tmp);
-                    tmp = index(cnt+1);
+                    tmp = index(cnt + 1);
                     cnt = cnt + 1;
                 end
                 u(i, j, :) = p_sorted(index(cnt));                

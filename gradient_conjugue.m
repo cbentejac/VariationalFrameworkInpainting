@@ -1,4 +1,4 @@
-function uz = gradient_conjugue (u0, epsilon, lambda, kz, fz, vx, vy, nb_iter)
+function uz = gradient_conjugue(u0, epsilon, lambda, kz, fz, vx, vy, nb_iter)
     uz = u0;
     r = (1 - lambda) * div(gradx(kz .* vx), grady(kz .* vy)) - lambda * kz .* fz;
     p = r;
@@ -7,9 +7,6 @@ function uz = gradient_conjugue (u0, epsilon, lambda, kz, fz, vx, vy, nb_iter)
         Ap = (1 - lambda) * div (gradx(kz .* gradx(uz)), grady(kz .* grady(uz))) - lambda * kz .* uz;
         r_t = permute(r, [2, 1, 3]);
         p_t = permute(p, [2, 1, 3]);
-        %tmp(:,:,1) = p_t(:,:,1) * Ap(:,:,1);
-        %tmp(:,:,2) = p_t(:,:,2) * Ap(:,:,2);
-        %tmp(:,:,3) = p_t(:,:,3) * Ap(:,:,3);
         alpha(:, :, 1) = (r(:, :, 1) * r_t(:, :, 1)) ./ (Ap(:, :, 1) * p_t(:, :, 1));
         alpha(:, :, 2) = (r(:, :, 2) * r_t(:, :, 2)) ./ (Ap(:, :, 2) * p_t(:, :, 2));
         alpha(:, :, 3) = (r(:, :, 3) * r_t(:, :, 3)) ./ (Ap(:, :, 3) * p_t(:, :, 3));

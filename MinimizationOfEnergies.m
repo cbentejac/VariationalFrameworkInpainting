@@ -30,9 +30,9 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         
         % Correspondance update
         if cnt == 1
-            offset_map = PatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
+            offset_map = ParallelizedPatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
         else
-            offset_map = PatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda, offset_map);
+            offset_map = ParallelizedPatchMatch(u_0, u_0 .* (1 - mask), mask, half_patch_size, 1, error, lambda, offset_map);
         end
         disp('Passed PatchMatch!');
         
@@ -49,6 +49,7 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         u = ImageUpdate(tmp_offset, tmp_u_hat, tmp_mask, half_patch_size, sigma2, lambda, median, average, poisson);
         
 %         u = image_update(tmp_u_hat, tmp_offset, tmp_mask, lambda, confidence_mask, half_patch_size, sigma2);
+%         u = image_update_mean(tmp_u_hat, tmp_offset, tmp_mask, confidence_mask, half_patch_size, sigma2);
         
         cnt = cnt + 1;
     end
