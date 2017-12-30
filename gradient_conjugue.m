@@ -3,7 +3,6 @@ function uz = gradient_conjugue(u0, epsilon, lambda, kz, fz, vx, vy, nb_iter)
     r = (1 - lambda) * div(gradx(kz .* vx), grady(kz .* vy)) - lambda * kz .* fz;
     p = r;
     for i = 1 : nb_iter
-        disp(i);
         Ap = (1 - lambda) * div (gradx(kz .* gradx(uz)), grady(kz .* grady(uz))) - lambda * kz .* uz;
         r_t = permute(r, [2, 1, 3]);
         p_t = permute(p, [2, 1, 3]);

@@ -1,7 +1,6 @@
 % Given two images A and B, returns the nearest-neighbour field using the
 % parallelized patch match method.
 function NNF = ParallelizedPatchMatch(A, B, mask, half_patch, iterations, error, lambda, NNF)
-tic;
     A = double(A);
     B = double(B);
     
@@ -99,5 +98,4 @@ tic;
         
         k = k + 1;
     end
-toc;
 end

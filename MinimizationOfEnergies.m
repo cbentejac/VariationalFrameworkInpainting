@@ -31,7 +31,6 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         else
             offset_map = ParallelizedPatchMatch(u_0, u_0 .* ~mask, mask, half_patch_size, 1, error, lambda, offset_map);
         end
-        disp('Passed PatchMatch!');
         
         % Confidence mask (used for image update)
         decay_time = 5;
