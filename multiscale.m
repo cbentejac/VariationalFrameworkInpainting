@@ -5,7 +5,7 @@ function [u_l, phi_l] = Multiscale(u0, Mask, size_patch, L, A, tolerance, sigma2
 
     %% Construct pyramid of inpainting domain(Mask)
     kernel_size = 0.62 * sqrt(r^2 - 1);
-    g_sigma = fspecial('gaussian', kernel_size);
+    g_sigma = fspecial('gaussian', round(kernel_size));
 
     pyramid_mask{1} = Mask;
     for l = 2 : L
