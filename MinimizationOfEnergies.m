@@ -8,6 +8,9 @@
 function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, lambda, half_patch_size, median, average, poisson)
     cnt = 1;
     u = u_0;
+    
+    tmp_u_hat = padarray(u_0 .* ~mask, [half_patch_size, half_patch_size], -1);
+    tmp_mask = padarray(mask, [half_patch_size, half_patch_size], -1);
         
     % Determining which error function will be used depending on the user's
     % input.
@@ -21,15 +24,15 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
     
     % While norm(u_(k+1) - u_k) < tolerance
     %while (norm(u(:) - u_0(:)) > tolerance || cnt == 1)
-    while cnt <= 5
+    while cnt <= 10
         disp(cnt);
-        u_0 = u; % Update of u_0 for the tolerance criterium.
+        u_1 = u; % Update of u_0 for the tolerance criterium.
         
         % Correspondance update
         if cnt == 1
-            offset_map = ParallelizedPatchMatch(u_0, u_0 .* ~mask, mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
+            offset_map = ParallelizedPatchMatch(u_1, u_1 .* ~mask, mask, half_patch_size, 1, error, lambda);%, lambda, M, sigma2, median, average, poisson,1);
         else
-            offset_map = ParallelizedPatchMatch(u_0, u_0 .* ~mask, mask, half_patch_size, 1, error, lambda, offset_map);
+            offset_map = ParallelizedPatchMatch(u_1, u_1 .* ~mask, mask, half_patch_size, 1, error, lambda, offset_map);
         end
         
         % Confidence mask (used for image update)
@@ -39,9 +42,7 @@ function [u, offset_map] = MinimizationOfEnergies(u_0, mask, sigma2, tolerance, 
         confidence_mask = ConfidenceMask(mask, decay_time, asymptotic_value);
         
         % Image update
-        tmp_offset = padarray(offset_map, [half_patch_size, half_patch_size], -1);
-        tmp_u_hat = padarray(u_0 .* ~mask, [half_patch_size, half_patch_size], -1);
-        tmp_mask = padarray(mask, [half_patch_size, half_patch_size], -1);
+        tmp_offset = padarray(offset_map, [half_patch_size, half_patch_size], -1);        
         u = ImageUpdate(tmp_offset, tmp_u_hat, tmp_mask, half_patch_size, sigma2, lambda, error);
         
 %         u = image_update(tmp_u_hat, tmp_offset, tmp_mask, lambda, confidence_mask, half_patch_size, sigma2);
